@@ -52,7 +52,8 @@
                     </select>
                 </div>
                 <div class="button-group">
-                    <button onclick="calculateAI()" class="btn primary">Calculate & Get AI Insights</button>
+                    <button type="button" id="aiInsightBtn" class="btn primary">Calculate & Get AI Insights</button>
+
                     <button onclick="openSaveModal()" class="btn secondary">Save Current as Template</button>
                     <button onclick="clearForms()" class="btn danger">Clear Forms</button>
                 </div>
@@ -161,6 +162,11 @@
                 </div>
             </div>
         </div>
+        <div id="ai-insights-container" class="ai-insights">
+            <h2>AI Insights</h2>
+            <div id="ai-insights-content">No insights available yet.</div>
+        </div>
+
     </main>
 
     <footer>
@@ -169,6 +175,7 @@
 
     <script src="app.js"></script>
     <script src="saveTemplates.js"></script>
+
 </body>
 
 </html>

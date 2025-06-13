@@ -636,3 +636,24 @@ body.dark-mode header {
 body.dark-mode .input-group label {
   color: #ffffff;
 }
+.ai-insights {
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin-top: 20px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  max-width: 600px;
+}
+
+.ai-insights h2 {
+  margin-top: 0;
+  font-size: 1.3em;
+  color: #333;
+}
+
+#ai-insights-content {
+  white-space: pre-line;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1em;
+  color: #444;
+}

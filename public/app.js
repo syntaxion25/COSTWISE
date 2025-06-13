@@ -1,15 +1,137 @@
 
-  const toggle = document.getElementById('nightToggle');
-  toggle.addEventListener('change', () => {
-    document.body.classList.toggle('dark-mode');
+const toggle = document.getElementById('nightToggle');
+toggle.addEventListener('change', () => {
+  document.body.classList.toggle('dark-mode');
+});
+
+function createPromptForAI(materials, labor, overheads, miscCost) {
+  let prompt = "You are a cost estimation assistant. Based on the following production data, provide insights such as:\n";
+  prompt += "- Identify the major cost drivers.\n";
+  prompt += "- Suggest areas for cost reduction.\n";
+  prompt += "- Comment on efficiency based on hours and cost.\n";
+  prompt += "- Give a brief cost summary in bullet points.\n\n";
+
+
+  // Materials Section
+  prompt += "Raw Materials:\n";
+  if (materials.length === 0) {
+    prompt += "None\n";
+  } else {
+    materials.forEach((mat, i) => {
+      prompt += `  ${i + 1}. ${mat.name || "Unnamed"} - Quantity: ${mat.quantity || 0}, Cost: ${mat.cost || 0}\n`;
+    });
+  }
+
+  // Labor Section
+  prompt += "\nLabor:\n";
+  if (labor.length === 0) {
+    prompt += "None\n";
+  } else {
+    labor.forEach((lab, i) => {
+      prompt += `  ${i + 1}. Hours: ${lab.hours || 0}, Cost: ${lab.cost || 0}\n`;
+    });
+  }
+
+  // Overheads Section
+  prompt += "\nOverheads:\n";
+  if (overheads.length === 0) {
+    prompt += "None\n";
+  } else {
+    overheads.forEach((oh, i) => {
+      prompt += `  ${i + 1}. Hours: ${oh.hours || 0}, Cost: ${oh.cost || 0}\n`;
+    });
+  }
+
+  // Miscellaneous
+  prompt += `\nMiscellaneous Costs: ₹${miscCost.toFixed(2)}\n\n`;
+
+  prompt += "Now, analyze and provide insights.";
+  return prompt;
+}
+
+function getAllMaterialData() {
+  const materialBlocks = document.querySelectorAll('.material-block');
+  const materials = [];
+
+  materialBlocks.forEach(block => {
+    const name = block.querySelector('.material-name')?.value || '';
+    const quantity = block.querySelector('.material-quantity')?.value || '';
+    const cost = block.querySelector('.material-cost')?.value || '';
+
+    if (name || quantity || cost) {
+      materials.push({ name, quantity, cost });
+    }
   });
 
+  return materials;
+}
+// Define the Together AI API call
+async function fetchAIInsightsFromTogether(prompt) {
+  try {
+    const res = await fetch('/api/get-insight', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
 
-// Uncomment if you want to enable dark mode toggle
-// toggle.addEventListener('change', () => {
-//   document.body.classList.toggle('dark-mode');
-//   currentTheme = toggle.checked ? 'dark' : 'light';
-// });
+    const data = await res.json();
+    return data.insight || "No insight returned.";
+  } catch (error) {
+    console.error("AI Error:", error);
+    return "Failed to fetch AI insights.";
+  }
+}
+
+
+
+async function generateAIInsights() {
+  const materials = getAllMaterialData();
+  const labor = getAllLaborData();
+  const overheads = getAllOverheadsData();
+  const misc = document.getElementById("miscellaneous_costs")?.value || "0";
+  const currency = document.getElementById("currency")?.value || "INR";
+
+  const prompt = `
+  Analyze the following production cost breakdown:
+  
+  Raw Materials: ${JSON.stringify(materials)}
+  Labor: ${JSON.stringify(labor)}
+  Overheads: ${JSON.stringify(overheads)}
+  Miscellaneous Costs: ${misc}
+  Currency: ${currency}
+  
+  Provide a brief analysis of inefficiencies or areas for cost optimization.
+  `;
+
+  const insightBox = document.getElementById("ai_insights_box");
+  if (!insightBox) return;
+
+  insightBox.textContent = "Generating insights...";
+  console.log("Generating insights with prompt:", prompt);
+
+  try {
+    const insights = await fetchAIInsightsFromTogether(prompt);
+    console.log("Generating success");
+    insightBox.textContent = insights;
+  } catch (error) {
+    console.error("Error fetching insights:", error);
+    insightBox.textContent = "Failed to generate insights.";
+  }
+}
+
+// Make sure generateAIInsights is globally accessible if needed
+window.generateAIInsights = generateAIInsights;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const aiBtn = document.getElementById('aiInsightBtn');
+  if (aiBtn) {
+    aiBtn.addEventListener('click', generateAIInsights);
+    console.log("Event listener added to AI insight button");
+  } else {
+    console.warn("AI insight button not found in DOM");
+  }
+});
+
 
 // Currency formatting
 function formatCurrency(amount, currency = 'INR') {
@@ -18,7 +140,7 @@ function formatCurrency(amount, currency = 'INR') {
     'USD': '$',
     'EUR': '€'
   };
-  
+
   const symbol = currencySymbols[currency] || '₹';
   return `${symbol}${parseFloat(amount).toFixed(2)}`;
 }
@@ -39,10 +161,10 @@ function calculateMaterialCosts() {
     const quantity = parseFloat(block.querySelector('.material-quantity')?.value) || 0;
     const unitCost = parseFloat(block.querySelector('.material-cost')?.value) || 0;
     const name = block.querySelector('.material-name')?.value || 'Unnamed Material';
-    
+
     const totalCost = quantity * unitCost;
     totalMaterialCost += totalCost;
-    
+
     if (quantity > 0 && unitCost > 0) {
       materials.push({
         name,
@@ -65,10 +187,10 @@ function calculateLaborCosts() {
   laborBlocks.forEach(block => {
     const hours = parseFloat(block.querySelector('.labor-hours')?.value) || 0;
     const hourlyRate = parseFloat(block.querySelector('.labor-cost')?.value) || 0;
-    
+
     const totalCost = hours * hourlyRate;
     totalLaborCost += totalCost;
-    
+
     if (hours > 0 && hourlyRate > 0) {
       laborItems.push({
         hours,
@@ -90,10 +212,10 @@ function calculateOverheadCosts() {
   overheadBlocks.forEach(block => {
     const hours = parseFloat(block.querySelector('.overhead-hours')?.value) || 0;
     const hourlyRate = parseFloat(block.querySelector('.overhead-cost')?.value) || 0;
-    
+
     const totalCost = hours * hourlyRate;
     totalOverheadCost += totalCost;
-    
+
     if (hours > 0 && hourlyRate > 0) {
       overheadItems.push({
         hours,
@@ -110,7 +232,7 @@ function calculateOverheadCosts() {
 function calculateMiscellaneousCosts() {
   const miscInput = document.getElementById('miscellaneous_costs');
   const totalMiscellaneousCost = parseFloat(miscInput?.value) || 0;
-  
+
   return { totalMiscellaneousCost };
 }
 
@@ -120,9 +242,9 @@ function calculateTotalCost() {
   const labor = calculateLaborCosts();
   const overheads = calculateOverheadCosts();
   const miscellaneous = calculateMiscellaneousCosts();
-  
+
   const totalCost = materials.totalMaterialCost + labor.totalLaborCost + overheads.totalOverheadCost + miscellaneous.totalMiscellaneousCost;
-  
+
   return {
     materials,
     labor,
@@ -139,32 +261,33 @@ function calculateTotalCost() {
 }
 
 // Update cost display
-function updateCostDisplay() {
+async function updateCostDisplay() {
   const currency = getCurrentCurrency();
   const costData = calculateTotalCost();
-  
+
   // Update or create cost summary display
   let costSummary = document.getElementById('cost-summary');
   if (!costSummary) {
     costSummary = document.createElement('div');
     costSummary.id = 'cost-summary';
     costSummary.className = 'cost-summary-card';
-    
+
     // Insert after all the tab content sections
-    const overheadsSection = document.getElementById('overheads_parent');
-    if (overheadsSection) {
-      overheadsSection.parentNode.insertBefore(costSummary, overheadsSection.nextSibling);
-    } else {
-      // Fallback: insert before footer
-      const main = document.querySelector('main');
-      const footer = document.querySelector('footer');
-      if (main && footer) {
-        main.insertBefore(costSummary, footer);
-      }
+    const savedTemplatesSection = document.getElementById('saved_templates');
+    if (savedTemplatesSection) {
+      savedTemplatesSection.parentNode.insertBefore(costSummary, savedTemplatesSection.nextSibling); 
+  } else {
+    // Fallback: insert before footer
+    const main = document.querySelector('main');
+    const footer = document.querySelector('footer');
+    if (main && footer) {
+      main.insertBefore(costSummary, footer);
     }
   }
-  
-  costSummary.innerHTML = `
+  // await generateAIInsights();
+}
+
+costSummary.innerHTML = `
     <h2>Cost Summary</h2>
     <div class="cost-breakdown">
       <div class="cost-item">
@@ -199,65 +322,65 @@ function updateCostDisplay() {
 function calculateAI() {
   const costData = calculateTotalCost();
   const currency = getCurrentCurrency();
-  
+
   if (costData.totalCost === 0) {
     alert("Please enter some cost data first to get AI insights!");
     return;
   }
-  
+
   // Update the display first
   updateCostDisplay();
-  
+
   // Generate AI insights
   let insights = [`Total Production Cost: ${formatCurrency(costData.totalCost, currency)}\n\n`];
-  
+
   // Cost breakdown insights
   if (costData.materials.totalMaterialCost > 0) {
     insights.push(`🔧 Materials account for ${costData.breakdown.materialsPercentage}% of total cost`);
   }
-  
+
   if (costData.labor.totalLaborCost > 0) {
     insights.push(`👷 Labor accounts for ${costData.breakdown.laborPercentage}% of total cost`);
   }
-  
+
   if (costData.overheads.totalOverheadCost > 0) {
     insights.push(`🏭 Overheads account for ${costData.breakdown.overheadsPercentage}% of total cost`);
   }
-  
+
   if (costData.miscellaneous.totalMiscellaneousCost > 0) {
     insights.push(`📦 Miscellaneous costs account for ${costData.breakdown.miscellaneousPercentage}% of total cost`);
   }
-  
+
   // Cost optimization suggestions
   insights.push('\n💡 AI Optimization Suggestions:');
-  
+
   if (parseFloat(costData.breakdown.materialsPercentage) > 60) {
     insights.push('• Consider bulk purchasing or alternative suppliers for materials');
   }
-  
+
   if (parseFloat(costData.breakdown.laborPercentage) > 50) {
     insights.push('• Explore automation opportunities to reduce labor costs');
   }
-  
+
   if (parseFloat(costData.breakdown.overheadsPercentage) > 30) {
     insights.push('• Review overhead allocation and identify cost-saving opportunities');
   }
-  
+
   if (parseFloat(costData.breakdown.miscellaneousPercentage) > 20) {
     insights.push('• Analyze miscellaneous costs for potential savings');
   }
-  
+
   if (costData.materials.materials.length > 5) {
     insights.push('• Consider consolidating materials to reduce complexity');
   }
-  
+
   // Profitability insights
   insights.push('\n📊 Profitability Analysis:');
   const suggestedMarkup = 1.3; // 30% markup
   const suggestedPrice = costData.totalCost * suggestedMarkup;
   insights.push(`• Suggested selling price (30% markup): ${formatCurrency(suggestedPrice, currency)}`);
   insights.push(`• Break-even quantity analysis recommended`);
-  
+
   alert(insights.join('\n'));
 }
 
@@ -268,7 +391,7 @@ function openSaveModal() {
     alert("No cost data to save. Please enter some values first!");
     return;
   }
-  
+
   const templateName = prompt("Enter a name for this cost template:");
   if (templateName) {
     const template = {
@@ -284,7 +407,7 @@ function openSaveModal() {
       },
       totalCost: costData.totalCost
     };
-    
+
     savedTemplates.push(template);
     updateSavedTemplatesDisplay();
     alert(`Template "${templateName}" saved successfully!\nTotal Cost: ${formatCurrency(costData.totalCost, getCurrentCurrency())}`);
@@ -295,17 +418,17 @@ function openSaveModal() {
 function getAllMaterialsData() {
   const materialBlocks = document.querySelectorAll('.material-block');
   const materials = [];
-  
+
   materialBlocks.forEach(block => {
     const name = block.querySelector('.material-name')?.value || '';
     const quantity = block.querySelector('.material-quantity')?.value || '';
     const cost = block.querySelector('.material-cost')?.value || '';
-    
+
     if (name || quantity || cost) {
       materials.push({ name, quantity, cost });
     }
   });
-  
+
   return materials;
 }
 
@@ -313,16 +436,16 @@ function getAllMaterialsData() {
 function getAllLaborData() {
   const laborBlocks = document.querySelectorAll('.labor-block');
   const labor = [];
-  
+
   laborBlocks.forEach(block => {
     const hours = block.querySelector('.labor-hours')?.value || '';
     const cost = block.querySelector('.labor-cost')?.value || '';
-    
+
     if (hours || cost) {
       labor.push({ hours, cost });
     }
   });
-  
+
   return labor;
 }
 
@@ -330,16 +453,16 @@ function getAllLaborData() {
 function getAllOverheadsData() {
   const overheadBlocks = document.querySelectorAll('.overhead-block');
   const overheads = [];
-  
+
   overheadBlocks.forEach(block => {
     const hours = block.querySelector('.overhead-hours')?.value || '';
     const cost = block.querySelector('.overhead-cost')?.value || '';
-    
+
     if (hours || cost) {
       overheads.push({ hours, cost });
     }
   });
-  
+
   return overheads;
 }
 
@@ -347,16 +470,16 @@ function getAllOverheadsData() {
 function loadTemplate(templateId) {
   const template = savedTemplates.find(t => t.id === templateId);
   if (!template) return;
-  
+
   // Clear existing forms first
   clearForms();
-  
+
   // Set currency
   const currencySelect = document.getElementById('currency');
   if (currencySelect) {
     currencySelect.value = template.currency;
   }
-  
+
   // Load materials
   template.data.materials.forEach((material, index) => {
     if (index > 0) createMaterialElement();
@@ -366,13 +489,13 @@ function loadTemplate(templateId) {
       const nameInput = block.querySelector('.material-name');
       const quantityInput = block.querySelector('.material-quantity');
       const costInput = block.querySelector('.material-cost');
-      
+
       if (nameInput) nameInput.value = material.name;
       if (quantityInput) quantityInput.value = material.quantity;
       if (costInput) costInput.value = material.cost;
     }
   });
-  
+
   // Load labor
   template.data.labor.forEach((labor, index) => {
     if (index > 0) createLaborElement();
@@ -381,12 +504,12 @@ function loadTemplate(templateId) {
     if (block) {
       const hoursInput = block.querySelector('.labor-hours');
       const costInput = block.querySelector('.labor-cost');
-      
+
       if (hoursInput) hoursInput.value = labor.hours;
       if (costInput) costInput.value = labor.cost;
     }
   });
-  
+
   // Load overheads
   template.data.overheads.forEach((overhead, index) => {
     if (index > 0) createOverheadsElement();
@@ -395,25 +518,25 @@ function loadTemplate(templateId) {
     if (block) {
       const hoursInput = block.querySelector('.overhead-hours');
       const costInput = block.querySelector('.overhead-cost');
-      
+
       if (hoursInput) hoursInput.value = overhead.hours;
       if (costInput) costInput.value = overhead.cost;
     }
   });
-  
+
   // Load miscellaneous
   const miscInput = document.getElementById('miscellaneous_costs');
   if (miscInput) {
     miscInput.value = template.data.miscellaneous;
   }
-  
+
   // Update display
   updateCostDisplay();
-  
+
   // Switch to materials tab
   const materialsTab = document.querySelector('[data-tab="materials_parent"]');
   if (materialsTab) materialsTab.click();
-  
+
   alert(`Template "${template.name}" loaded successfully!`);
 }
 
@@ -429,12 +552,12 @@ function deleteTemplate(templateId) {
 function updateSavedTemplatesDisplay() {
   const templateList = document.querySelector('.template-list');
   if (!templateList) return;
-  
+
   if (savedTemplates.length === 0) {
     templateList.innerHTML = '<p class="no-templates">No saved templates yet. Create and save a template to see it here.</p>';
     return;
   }
-  
+
   templateList.innerHTML = savedTemplates.map(template => `
     <div class="template-item">
       <div class="template-info">
@@ -458,12 +581,12 @@ function clearForms() {
 // Add event listeners for real-time calculation
 function addCalculationListeners() {
   // Listen for changes in all input fields
-  document.addEventListener('input', function(e) {
+  document.addEventListener('input', function (e) {
     if (e.target.matches('.material-quantity, .material-cost, .labor-hours, .labor-cost, .overhead-hours, .overhead-cost, .miscellaneous-costs')) {
       updateCostDisplay();
     }
   });
-  
+
   // Listen for currency changes
   const currencySelect = document.getElementById('currency');
   if (currencySelect) {
@@ -472,7 +595,7 @@ function addCalculationListeners() {
 }
 
 // Initialize calculation listeners when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   addCalculationListeners();
   updateSavedTemplatesDisplay();
   // Force initial display creation
@@ -482,7 +605,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Also trigger on window load as backup
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
   updateCostDisplay();
 });
 
@@ -492,68 +615,68 @@ let overheadCounter = 1;
 
 // General delete logic for any block
 function deleteElement(button) {
-    const block = button.closest(".outlined-wrapper");
-    const parent = block.parentNode;
-    if (block !== parent.querySelector(".outlined-wrapper")) {
-        block.remove();
-        updateCostDisplay(); // Update costs after deletion
-    } else {
-        console.warn("Cannot delete the first block.");
-    }
+  const block = button.closest(".outlined-wrapper");
+  const parent = block.parentNode;
+  if (block !== parent.querySelector(".outlined-wrapper")) {
+    block.remove();
+    updateCostDisplay(); // Update costs after deletion
+  } else {
+    console.warn("Cannot delete the first block.");
+  }
 }
 
 // Clone for Raw Materials
 function createMaterialElement() {
-    const parent = document.getElementById("materials_parent");
-    const original = parent.querySelector(".material-block");
-    const clone = original.cloneNode(true);
-    clone.querySelectorAll("input").forEach(input => input.value = "");
-    clone.id = `material_${materialCounter++}`;
-    clone.querySelector("button.delete-btn").onclick = function () {
-        deleteElement(this);
-    };
-    parent.insertBefore(clone, parent.lastElementChild);
-    
-    // Add event listeners to new inputs
-    clone.querySelectorAll('.material-quantity, .material-cost').forEach(input => {
-        input.addEventListener('input', updateCostDisplay);
-    });
+  const parent = document.getElementById("materials_parent");
+  const original = parent.querySelector(".material-block");
+  const clone = original.cloneNode(true);
+  clone.querySelectorAll("input").forEach(input => input.value = "");
+  clone.id = `material_${materialCounter++}`;
+  clone.querySelector("button.delete-btn").onclick = function () {
+    deleteElement(this);
+  };
+  parent.insertBefore(clone, parent.lastElementChild);
+
+  // Add event listeners to new inputs
+  clone.querySelectorAll('.material-quantity, .material-cost').forEach(input => {
+    input.addEventListener('input', updateCostDisplay);
+  });
 }
 
 // Clone for Labor
 function createLaborElement() {
-    const parent = document.getElementById("labor_parent");
-    const original = parent.querySelector(".labor-block");
-    const clone = original.cloneNode(true);
-    clone.querySelectorAll("input").forEach(input => input.value = "");
-    clone.id = `labor_${laborCounter++}`;
-    clone.querySelector("button.delete-btn").onclick = function () {
-        deleteElement(this);
-    };
-    parent.insertBefore(clone, parent.lastElementChild);
-    
-    // Add event listeners to new inputs
-    clone.querySelectorAll('.labor-hours, .labor-cost').forEach(input => {
-        input.addEventListener('input', updateCostDisplay);
-    });
+  const parent = document.getElementById("labor_parent");
+  const original = parent.querySelector(".labor-block");
+  const clone = original.cloneNode(true);
+  clone.querySelectorAll("input").forEach(input => input.value = "");
+  clone.id = `labor_${laborCounter++}`;
+  clone.querySelector("button.delete-btn").onclick = function () {
+    deleteElement(this);
+  };
+  parent.insertBefore(clone, parent.lastElementChild);
+
+  // Add event listeners to new inputs
+  clone.querySelectorAll('.labor-hours, .labor-cost').forEach(input => {
+    input.addEventListener('input', updateCostDisplay);
+  });
 }
 
 // Clone for Overheads
 function createOverheadsElement() {
-    const parent = document.getElementById("overheads_parent");
-    const original = parent.querySelector(".overhead-block");
-    const clone = original.cloneNode(true);
-    clone.querySelectorAll("input").forEach(input => input.value = "");
-    clone.id = `overhead_${overheadCounter++}`;
-    clone.querySelector("button.delete-btn").onclick = function () {
-        deleteElement(this);
-    };
-    parent.insertBefore(clone, parent.lastElementChild);
-    
-    // Add event listeners to new inputs
-    clone.querySelectorAll('.overhead-hours, .overhead-cost').forEach(input => {
-        input.addEventListener('input', updateCostDisplay);
-    });
+  const parent = document.getElementById("overheads_parent");
+  const original = parent.querySelector(".overhead-block");
+  const clone = original.cloneNode(true);
+  clone.querySelectorAll("input").forEach(input => input.value = "");
+  clone.id = `overhead_${overheadCounter++}`;
+  clone.querySelector("button.delete-btn").onclick = function () {
+    deleteElement(this);
+  };
+  parent.insertBefore(clone, parent.lastElementChild);
+
+  // Add event listeners to new inputs
+  clone.querySelectorAll('.overhead-hours, .overhead-cost').forEach(input => {
+    input.addEventListener('input', updateCostDisplay);
+  });
 }
 
 // UPDATED TAB LOGIC

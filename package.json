@@ -1,0 +1,27 @@
+{
+  "name": "costwise",
+  "version": "1.0.0",
+  "main": "aiIntegrate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/syntaxion25/Costwise.git"
+  },
+  "keywords": [],
+  "author": "Syntaxion",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/syntaxion25/Costwise/issues"
+  },
+  "homepage": "https://github.com/syntaxion25/Costwise#readme",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2",
+    "nodemon": "^3.1.10"
+  }
+}
