@@ -6,12 +6,6 @@
     toggle.checked = true;
   }
 
-  toggle.addEventListener('change', () => {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('theme', toggle.checked ? 'dark' : 'light');
-  });
-
-
 
 function calculateAI() {
   alert("Calculating with AI insights...");
