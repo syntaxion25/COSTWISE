@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CostWise</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <header>  
+        
+
+        <div class="container">
+            <div class="header-left">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                    <line x1="12" y1="22" x2="12" y2="17"></line>
+                    <line x1="12" y1="12" x2="12" y2="7"></line>
+                    <line x1="20" y1="14.5" x2="20" y2="9.5"></line>
+                    <line x1="4" y1="14.5" x2="4" y2="9.5"></line>
+                </svg>
+                <h1>CostWise</h1>
+            </div>
+            <div class="header-right">
+                <p>Smart Production Cost Calculator</p>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="card-container">
+            <div class="card-header">
+                <div class="currency-select">
+                    <label for="currency">Currency</label>
+                    <select id="currency">
+                        <option value="INR">₹ INR - Indian Rupee</option>
+                        <option value="EUR">€ EUR - Euro</option>
+                        <option value="USD">$ USD - US Dollar</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button onclick="calculateAI()" class="btn primary">Calculate & Get AI Insights</button>
+                    <button onclick="openSaveModal()" class="btn secondary">Save Current as Template</button>
+                    <button onclick="clearForms()" class="btn danger">Clear Forms</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-wrapper">
+            <div class="tab-container">
+                <button class="tab" data-tab="materials_parent">Raw Materials</button>
+                <button class="tab" data-tab="labor_parent">Labor</button>
+                <button class="tab" data-tab="overheads_parent">Overheads</button>
+                <button class="tab" data-tab="tab4">Miscellaneous</button>
+                <button class="tab" data-tab="tab5">Saved Templates</button>
+            </div>
+        </div>
+
+        <!-- Raw Materials -->
+        <div id="materials_parent" class="raw-materials-card">
+            <h2>Raw Materials</h2>
+            <div class="outlined-wrapper material-block">
+                <div class="material-inputs-labeled">
+                    <div class="input-group">
+                        <label>Material Name</label>
+                        <input type="text" placeholder="Enter name" id="material_name" class="material-name" />
+                    </div>
+                    <div class="input-group">
+                        <label>Quantity</label>
+                        <input type="number" placeholder="Enter quantity" id="material_quantity" class="material-quantity" />
+                    </div>
+                    <div class="input-group">
+                        <label>Per Unit Cost ($)</label>
+                        <input type="number" placeholder="Enter cost" id="material_cost" class="material-cost" />
+                    </div>
+                    <button onclick="deleteElement(this)" class="delete-btn">Delete</button>
+                </div>
+            </div>
+            <button onclick="createMaterialElement()" class="addbutton">+ Add Material</button>
+        </div>
+
+        <!-- Labor -->
+        <div id="labor_parent" class="raw-materials-card">
+            <h2>Labor Costs</h2>
+            <div class="outlined-wrapper labor-block">
+                <div class="material-inputs-labeled">
+                    <div class="input-group">
+                        <label>Hours Worked</label>
+                        <input type="number" placeholder="Enter number of hours" id="labor_hours" class="labor-hours" />
+                    </div>
+                    <div class="input-group">
+                        <label>Labor Cost</label>
+                        <input type="number" placeholder="Enter the cost of labor" id="labor_cost" class="labor-cost" />
+                    </div>
+                    <button onclick="deleteElement(this)" class="delete-btn">Delete</button>
+                </div>
+            </div>
+            <button onclick="createLaborElement()" class="addbutton">+ Add Labor</button>
+        </div>
+
+        <!-- Overheads -->
+        <div id="overheads_parent" class="raw-materials-card">
+            <h2>Overheads Costs</h2>
+            <div class="outlined-wrapper overhead-block">
+                <div class="material-inputs-labeled">
+                    <div class="input-group">
+                        <label>Hours Worked</label>
+                        <input type="number" placeholder="Enter number of hours" id="overhead_hours" class="overhead-hours" />
+                    </div>
+                    <div class="input-group">
+                        <label>Labor Cost</label>
+                        <input type="number" placeholder="Enter the cost of labor" id="overhead_cost" class="overhead-cost" />
+                    </div>
+                    <button onclick="deleteElement(this)" class="delete-btn">Delete</button>
+                </div>
+            </div>
+            <button onclick="createOverheadsElement()" class="addbutton">+ Add Overhead</button>
+        </div>
+    </main>
+
+    <footer >
+        <p>&copy; 2025 CostWise</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
