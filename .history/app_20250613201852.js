@@ -1,35 +1,19 @@
+const toggle = document.getElementById('nightToggle');
+toggle.addEventListener('change', () => {
+  document.body.classList.toggle('dark-mode');
+});
 
-  const toggle = document.getElementById('nightToggle');
-  toggle.addEventListener('change', () => {
-    document.body.classList.toggle('dark-mode');
-  });
-
-
-// Uncomment if you want to enable dark mode toggle
-// toggle.addEventListener('change', () => {
-//   document.body.classList.toggle('dark-mode');
-//   currentTheme = toggle.checked ? 'dark' : 'light';
-// });
-
-// Currency formatting
 function formatCurrency(amount, currency = 'INR') {
-  const currencySymbols = {
-    'INR': '₹',
-    'USD': '$',
-    'EUR': '€'
-  };
-  
+  const currencySymbols = { 'INR': '₹', 'USD': '$', 'EUR': '€' };
   const symbol = currencySymbols[currency] || '₹';
   return `${symbol}${parseFloat(amount).toFixed(2)}`;
 }
 
-// Get current selected currency
 function getCurrentCurrency() {
   const currencySelect = document.getElementById('currency');
   return currencySelect ? currencySelect.value : 'INR';
 }
 
-// Calculate material costs
 function calculateMaterialCosts() {
   const materialBlocks = document.querySelectorAll('.material-block');
   let totalMaterialCost = 0;
@@ -39,24 +23,17 @@ function calculateMaterialCosts() {
     const quantity = parseFloat(block.querySelector('.material-quantity')?.value) || 0;
     const unitCost = parseFloat(block.querySelector('.material-cost')?.value) || 0;
     const name = block.querySelector('.material-name')?.value || 'Unnamed Material';
-    
     const totalCost = quantity * unitCost;
     totalMaterialCost += totalCost;
-    
+
     if (quantity > 0 && unitCost > 0) {
-      materials.push({
-        name,
-        quantity,
-        unitCost,
-        totalCost
-      });
+      materials.push({ name, quantity, unitCost, totalCost });
     }
   });
 
   return { totalMaterialCost, materials };
 }
 
-// Calculate labor costs
 function calculateLaborCosts() {
   const laborBlocks = document.querySelectorAll('.labor-block');
   let totalLaborCost = 0;
@@ -65,23 +42,17 @@ function calculateLaborCosts() {
   laborBlocks.forEach(block => {
     const hours = parseFloat(block.querySelector('.labor-hours')?.value) || 0;
     const hourlyRate = parseFloat(block.querySelector('.labor-cost')?.value) || 0;
-    
     const totalCost = hours * hourlyRate;
     totalLaborCost += totalCost;
-    
+
     if (hours > 0 && hourlyRate > 0) {
-      laborItems.push({
-        hours,
-        hourlyRate,
-        totalCost
-      });
+      laborItems.push({ hours, hourlyRate, totalCost });
     }
   });
 
   return { totalLaborCost, laborItems };
 }
 
-// Calculate overhead costs
 function calculateOverheadCosts() {
   const overheadBlocks = document.querySelectorAll('.overhead-block');
   let totalOverheadCost = 0;
@@ -90,39 +61,30 @@ function calculateOverheadCosts() {
   overheadBlocks.forEach(block => {
     const hours = parseFloat(block.querySelector('.overhead-hours')?.value) || 0;
     const hourlyRate = parseFloat(block.querySelector('.overhead-cost')?.value) || 0;
-    
     const totalCost = hours * hourlyRate;
     totalOverheadCost += totalCost;
-    
+
     if (hours > 0 && hourlyRate > 0) {
-      overheadItems.push({
-        hours,
-        hourlyRate,
-        totalCost
-      });
+      overheadItems.push({ hours, hourlyRate, totalCost });
     }
   });
 
   return { totalOverheadCost, overheadItems };
 }
 
-// Calculate miscellaneous costs
 function calculateMiscellaneousCosts() {
   const miscInput = document.getElementById('miscellaneous_costs');
   const totalMiscellaneousCost = parseFloat(miscInput?.value) || 0;
-  
   return { totalMiscellaneousCost };
 }
 
-// Calculate total production cost
 function calculateTotalCost() {
   const materials = calculateMaterialCosts();
   const labor = calculateLaborCosts();
   const overheads = calculateOverheadCosts();
   const miscellaneous = calculateMiscellaneousCosts();
-  
   const totalCost = materials.totalMaterialCost + labor.totalLaborCost + overheads.totalOverheadCost + miscellaneous.totalMiscellaneousCost;
-  
+
   return {
     materials,
     labor,
@@ -138,32 +100,23 @@ function calculateTotalCost() {
   };
 }
 
-// Update cost display
 function updateCostDisplay() {
   const currency = getCurrentCurrency();
   const costData = calculateTotalCost();
-  
-  // Update or create cost summary display
+
   let costSummary = document.getElementById('cost-summary');
   if (!costSummary) {
     costSummary = document.createElement('div');
     costSummary.id = 'cost-summary';
     costSummary.className = 'cost-summary-card';
-    
-    // Insert after all the tab content sections
-    const overheadsSection = document.getElementById('overheads_parent');
-    if (overheadsSection) {
-      overheadsSection.parentNode.insertBefore(costSummary, overheadsSection.nextSibling);
-    } else {
-      // Fallback: insert before footer
-      const main = document.querySelector('main');
-      const footer = document.querySelector('footer');
-      if (main && footer) {
-        main.insertBefore(costSummary, footer);
-      }
+
+    const main = document.querySelector('main');
+    const footer = document.querySelector('footer');
+    if (main && footer) {
+      main.insertBefore(costSummary, footer);
     }
   }
-  
+
   costSummary.innerHTML = `
     <h2>Cost Summary</h2>
     <div class="cost-breakdown">
@@ -593,3 +546,5 @@ tabButtons.forEach(button => {
 
 // Optional: Show the first tab by default
 document.querySelector(".tab")?.click();
+
+window.addEventListener('load', () => updateCostDisplay());

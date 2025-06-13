@@ -14,7 +14,7 @@ header {
   position: fixed;
   top: 0;
   width: 100%;
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background-color: #007bff;
   color: white;
   padding: 12px 20px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
@@ -66,6 +66,8 @@ header {
   }
 }
 
+
+
 footer {
   margin-top: 50px;
   text-align: center;
@@ -73,6 +75,7 @@ footer {
   background-color: #f1f1f1;
   font-size: 0.9rem;
   color: #444;
+
 }
 
 /* Card Styles */
@@ -83,85 +86,6 @@ footer {
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   max-width: 1400px;
-}
-
-/* Cost Summary Card */
-.cost-summary-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 25px;
-  margin: 20px auto;
-  border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-  max-width: 1400px;
-  position: relative;
-  overflow: hidden;
-}
-
-.cost-summary-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-  pointer-events: none;
-}
-
-.cost-summary-card h2 {
-  margin-bottom: 20px;
-  font-size: 1.8rem;
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.cost-breakdown {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.cost-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
-}
-
-.cost-item:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-}
-
-.cost-item.total-cost {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-top: 10px;
-}
-
-.cost-label {
-  font-weight: 600;
-  flex: 1;
-}
-
-.cost-value {
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-right: 10px;
-}
-
-.cost-percentage {
-  font-size: 0.9rem;
-  opacity: 0.8;
-  font-weight: 500;
 }
 
 .card-header {
@@ -250,6 +174,8 @@ svg {
   height: 24px;
 }
 
+
+
 .tab-wrapper {
   max-width: 1400px;
   margin: 20px auto;
@@ -257,7 +183,7 @@ svg {
 
 .tab-container {
   display: flex;
- background-color:  #9159c9;
+  background-color: #afd8f5;
   border-radius: 10px;
   padding: 10px;
   overflow-x: auto;
@@ -266,10 +192,11 @@ svg {
 
 .tab {
   flex: 1;
-   background-color:  #9159c9;
+  background-color : #afd8f5;
+
   padding: 12px 16px;
   text-align: center;
-  color: #ffffff;
+  color: #002a5c;
   font-weight: 500;
   text-decoration: none;
   transition: background-color 0.3s, font-weight 0.3s;
@@ -278,22 +205,20 @@ svg {
 }
 
 .tab:hover {
-  background-color: #c870e6;
-  border-radius: 8px;
+  background-color: #d6e4f3;
 }
 
 .tab.active {
-  background-color: #e5d5fb;
+  background-color: #eef4fa;
   font-weight: bold;
-  border: 1.5px solid #afa4de;
-  color: black;
-  border-radius: 8px;
+  border: 1.5px solid #a4c0de;
 }
 
 .tab.saved-template::before {
   content: "📁";
   margin-right: 6px;
 }
+
 
 .raw-materials-card {
   background: #fff;
@@ -361,12 +286,14 @@ svg {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  
 }
 
 .addbutton:hover {
   background-color: #00bfa6;
   transform: translateY(-2px);
 }
+
 
 .delete-btn {
   background-color: #ff4d4f;
@@ -414,25 +341,6 @@ body.dark-mode .outlined-wrapper {
   color: #e0e0e0;
 }
 
-body.dark-mode .cost-summary-card {
-  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-  color: #e2e8f0;
-}
-
-body.dark-mode .cost-item {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .cost-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .cost-item.total-cost {
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
 body.dark-mode .tab-container {
   background-color: #2c2c2c;
 }
@@ -462,7 +370,6 @@ body.dark-mode input::placeholder,
 body.dark-mode select::placeholder {
   color: #aaa;
 }
-
 
 body.dark-mode .btn,
 body.dark-mode .addbutton {
@@ -494,6 +401,7 @@ body.dark-mode .delete-btn:hover {
   background-color: #ff1a1a;
 }
 
+
 .tab-content {
   display: none;
   max-width: 1400px;
@@ -503,6 +411,7 @@ body.dark-mode .delete-btn:hover {
 .tab-content.active {
   display: block;
 }
+
 
 .theme-toggle-wrapper {
   position: fixed;
@@ -517,6 +426,12 @@ body.dark-mode .delete-btn:hover {
   border: none;
   color: white;
   cursor: pointer;
+}
+
+
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
 }
 
 .toggle-container {
@@ -569,65 +484,4 @@ input:checked + .slider {
 
 input:checked + .slider::before {
   transform: translateX(30px);
-}
-
-/* Responsive Design for Cost Summary */
-@media (max-width: 768px) {
-  .cost-item {
-    flex-direction: column;
-    text-align: center;
-    gap: 8px;
-  }
-  
-  .cost-label, .cost-value, .cost-percentage {
-    margin: 0;
-  }
-  
-  .cost-summary-card {
-    margin: 15px;
-    padding: 20px;
-  }
-  
-  .cost-summary-card h2 {
-    font-size: 1.5rem;
-  }
-}
-
-/* Slogan under title */
-.slogan {
-  font-size: 0.9rem;
-  opacity: 0.9;
-  margin-top: 4px;
-}
-
-/* Adjust for mobile */
-@media (max-width: 600px) {
-  .header-left {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .slogan {
-    text-align: left;
-  }
-
-  .header-right {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .toggle-container {
-    justify-content: flex-end;
-    width: 100%;
-  }
-}
-
-/* Updated Dark Mode Gradient */
-body.dark-mode header {
-  background: linear-gradient(135deg, #2c2c2c 0%, #434343 100%);
-}
-
-body.dark-mode .input-group label {
-  color: #ffffff;
 }

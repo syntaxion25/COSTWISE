@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color : invert;
 }
 
 body {
@@ -257,7 +258,7 @@ svg {
 
 .tab-container {
   display: flex;
- background-color:  #9159c9;
+  background-color: #afd8f5;
   border-radius: 10px;
   padding: 10px;
   overflow-x: auto;
@@ -266,10 +267,10 @@ svg {
 
 .tab {
   flex: 1;
-   background-color:  #9159c9;
+  background-color : #afd8f5;
   padding: 12px 16px;
   text-align: center;
-  color: #ffffff;
+  color: #002a5c;
   font-weight: 500;
   text-decoration: none;
   transition: background-color 0.3s, font-weight 0.3s;
@@ -278,16 +279,13 @@ svg {
 }
 
 .tab:hover {
-  background-color: #c870e6;
-  border-radius: 8px;
+  background-color: #d6e4f3;
 }
 
 .tab.active {
-  background-color: #e5d5fb;
+  background-color: #eef4fa;
   font-weight: bold;
-  border: 1.5px solid #afa4de;
-  color: black;
-  border-radius: 8px;
+  border: 1.5px solid #a4c0de;
 }
 
 .tab.saved-template::before {
@@ -463,7 +461,6 @@ body.dark-mode select::placeholder {
   color: #aaa;
 }
 
-
 body.dark-mode .btn,
 body.dark-mode .addbutton {
   background-color: #333;
@@ -626,8 +623,4 @@ input:checked + .slider::before {
 /* Updated Dark Mode Gradient */
 body.dark-mode header {
   background: linear-gradient(135deg, #2c2c2c 0%, #434343 100%);
-}
-
-body.dark-mode .input-group label {
-  color: #ffffff;
 }

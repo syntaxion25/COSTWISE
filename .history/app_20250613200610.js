@@ -1,15 +1,14 @@
+// Initialize variables
+let savedTemplates = [];
+let materialCounter = 1;
+let laborCounter = 1;
+let overheadCounter = 1;
 
-  const toggle = document.getElementById('nightToggle');
-  toggle.addEventListener('change', () => {
-    document.body.classList.toggle('dark-mode');
-  });
-
-
-// Uncomment if you want to enable dark mode toggle
-// toggle.addEventListener('change', () => {
-//   document.body.classList.toggle('dark-mode');
-//   currentTheme = toggle.checked ? 'dark' : 'light';
-// });
+// Dark mode toggle
+const toggle = document.getElementById('nightToggle');
+toggle.addEventListener('change', () => {
+  document.body.classList.toggle('dark-mode');
+});
 
 // Currency formatting
 function formatCurrency(amount, currency = 'INR') {
@@ -138,35 +137,19 @@ function calculateTotalCost() {
   };
 }
 
-// Update cost display
+// Update cost display in the Cost Summary tab
 function updateCostDisplay() {
   const currency = getCurrentCurrency();
   const costData = calculateTotalCost();
   
-  // Update or create cost summary display
-  let costSummary = document.getElementById('cost-summary');
-  if (!costSummary) {
-    costSummary = document.createElement('div');
-    costSummary.id = 'cost-summary';
-    costSummary.className = 'cost-summary-card';
-    
-    // Insert after all the tab content sections
-    const overheadsSection = document.getElementById('overheads_parent');
-    if (overheadsSection) {
-      overheadsSection.parentNode.insertBefore(costSummary, overheadsSection.nextSibling);
-    } else {
-      // Fallback: insert before footer
-      const main = document.querySelector('main');
-      const footer = document.querySelector('footer');
-      if (main && footer) {
-        main.insertBefore(costSummary, footer);
-      }
-    }
-  }
+  // Find the cost summary section
+  const costSummary = document.getElementById('cost_summary');
+  if (!costSummary) return;
   
-  costSummary.innerHTML = `
-    <h2>Cost Summary</h2>
-    <div class="cost-breakdown">
+  // Update the cost breakdown content
+  const costBreakdown = costSummary.querySelector('.cost-breakdown');
+  if (costBreakdown) {
+    costBreakdown.innerHTML = `
       <div class="cost-item">
         <span class="cost-label">Raw Materials:</span>
         <span class="cost-value">${formatCurrency(costData.materials.totalMaterialCost, currency)}</span>
@@ -191,8 +174,8 @@ function updateCostDisplay() {
         <span class="cost-label">Total Production Cost:</span>
         <span class="cost-value">${formatCurrency(costData.totalCost, currency)}</span>
       </div>
-    </div>
-  `;
+    `;
+  }
 }
 
 // Enhanced calculateAI function with detailed insights
@@ -207,6 +190,10 @@ function calculateAI() {
   
   // Update the display first
   updateCostDisplay();
+  
+  // Switch to cost summary tab
+  const costSummaryTab = document.querySelector('[data-tab="cost_summary"]');
+  if (costSummaryTab) costSummaryTab.click();
   
   // Generate AI insights
   let insights = [`Total Production Cost: ${formatCurrency(costData.totalCost, currency)}\n\n`];
@@ -455,41 +442,6 @@ function clearForms() {
   updateCostDisplay(); // Update display after clearing
 }
 
-// Add event listeners for real-time calculation
-function addCalculationListeners() {
-  // Listen for changes in all input fields
-  document.addEventListener('input', function(e) {
-    if (e.target.matches('.material-quantity, .material-cost, .labor-hours, .labor-cost, .overhead-hours, .overhead-cost, .miscellaneous-costs')) {
-      updateCostDisplay();
-    }
-  });
-  
-  // Listen for currency changes
-  const currencySelect = document.getElementById('currency');
-  if (currencySelect) {
-    currencySelect.addEventListener('change', updateCostDisplay);
-  }
-}
-
-// Initialize calculation listeners when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-  addCalculationListeners();
-  updateSavedTemplatesDisplay();
-  // Force initial display creation
-  setTimeout(() => {
-    updateCostDisplay();
-  }, 100);
-});
-
-// Also trigger on window load as backup
-window.addEventListener('load', function() {
-  updateCostDisplay();
-});
-
-let materialCounter = 1;
-let laborCounter = 1;
-let overheadCounter = 1;
-
 // General delete logic for any block
 function deleteElement(button) {
     const block = button.closest(".outlined-wrapper");
@@ -556,40 +508,67 @@ function createOverheadsElement() {
     });
 }
 
+// Add event listeners for real-time calculation
+function addCalculationListeners() {
+  // Listen for changes in all input fields
+  document.addEventListener('input', function(e) {
+    if (e.target.matches('.material-quantity, .material-cost, .labor-hours, .labor-cost, .overhead-hours, .overhead-cost, .miscellaneous-costs')) {
+      updateCostDisplay();
+    }
+  });
+  
+  // Listen for currency changes
+  const currencySelect = document.getElementById('currency');
+  if (currencySelect) {
+    currencySelect.addEventListener('change', updateCostDisplay);
+  }
+}
+
 // UPDATED TAB LOGIC
 const tabButtons = document.querySelectorAll(".tab");
 const tabSections = document.querySelectorAll(".raw-materials-card");
 
-tabButtons.forEach(button => {
-  button.addEventListener("click", function () {
-    const target = this.dataset.tab;
+function initializeTabs() {
+  tabButtons.forEach(button => {
+    button.addEventListener("click", function () {
+      const target = this.dataset.tab;
 
-    // Hide all sections
-    tabSections.forEach(section => {
-      section.style.display = "none";
+      // Hide all sections
+      tabSections.forEach(section => {
+        section.style.display = "none";
+      });
+
+      // Remove active class from all buttons
+      tabButtons.forEach(btn => btn.classList.remove("active"));
+
+      // Show the selected section
+      const targetSection = document.getElementById(target);
+      if (targetSection) {
+        targetSection.style.display = "block";
+      }
+
+      // Set active class
+      this.classList.add("active");
     });
-
-    // Remove active class from all buttons
-    tabButtons.forEach(btn => btn.classList.remove("active"));
-
-    // Show the selected section
-    const targetSection = document.getElementById(target);
-    if (targetSection) {
-      targetSection.style.display = "block";
-    } else if (target === 'tab4') {
-      // Show miscellaneous section
-      const miscSection = document.getElementById('miscellaneous_parent');
-      if (miscSection) miscSection.style.display = "block";
-    } else if (target === 'tab5') {
-      // Show saved templates section
-      const templatesSection = document.getElementById('saved_templates');
-      if (templatesSection) templatesSection.style.display = "block";
-    }
-
-    // Set active class
-    this.classList.add("active");
   });
+
+  // Show the first tab by default
+  const firstTab = document.querySelector(".tab");
+  if (firstTab) firstTab.click();
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  initializeTabs();
+  addCalculationListeners();
+  updateSavedTemplatesDisplay();
+  // Force initial display creation
+  setTimeout(() => {
+    updateCostDisplay();
+  }, 100);
 });
 
-// Optional: Show the first tab by default
-document.querySelector(".tab")?.click();
+// Also trigger on window load as backup
+window.addEventListener('load', function() {
+  updateCostDisplay();
+});

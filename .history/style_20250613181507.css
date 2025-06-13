@@ -1,0 +1,391 @@
+/* ========== RESET & BASE ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8fbff;
+  color: #000;
+  padding-top: 5em; /* space for fixed header */
+  line-height: 1.5;
+}
+
+/* ========== HEADER ========== */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  padding: 0.75em 1.25em;
+  box-shadow: 0 0.1875em 0.5em rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 75em;
+  margin: 0 auto;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.625em;
+}
+
+.logo {
+  width: 2em;
+  height: 2em;
+  stroke: white;
+}
+
+.header-left h1 {
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.header-right p {
+  font-size: 0.9em;
+  opacity: 0.9;
+  text-align: right;
+}
+
+/* ========== FOOTER ========== */
+footer {
+  margin-top: 3em;
+  text-align: center;
+  padding: 0.75em;
+  background-color: #f1f1f1;
+  font-size: 0.9em;
+  color: #444;
+}
+
+/* ========== RESPONSIVE HEADER/FOOTER ========== */
+@media (max-width: 37.5em) {
+  .container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5em;
+  }
+
+  .header-right p {
+    text-align: left;
+  }
+}
+
+/* ========== CARD STYLES ========== */
+.card-container,
+.raw-materials-card {
+  background: #fff;
+  padding: 1.25em;
+  margin: 1.25em auto;
+  border-radius: 1em;
+  box-shadow: 0 0.5em 1.5em rgba(0, 0, 0, 0.08);
+  max-width: 87.5em;
+}
+
+.card-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.25em;
+}
+
+/* ========== TABS ========== */
+.tab-wrapper {
+  max-width: 87.5em;
+  margin: 1.25em auto;
+}
+
+.tab-container {
+  display: flex;
+  background-color: #afd8f5;
+  border-radius: 0.625em;
+  padding: 0.625em;
+  overflow-x: auto;
+  box-shadow: 0 0.125em 0.5em rgba(0, 0, 0, 0.05);
+}
+
+.tab {
+  flex: 1;
+  background-color: #afd8f5;
+  padding: 0.75em 1em;
+  text-align: center;
+  color: #002a5c;
+  font-weight: 500;
+  white-space: nowrap;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.tab:hover {
+  background-color: #d6e4f3;
+}
+
+.tab.active {
+  background-color: #eef4fa;
+  font-weight: bold;
+  border: 0.1em solid #a4c0de;
+}
+
+.tab.saved-template::before {
+  content: "📁";
+  margin-right: 0.4em;
+}
+
+/* ========== INPUT GROUP ========== */
+.outlined-wrapper {
+  border: 0.1em solid #cbd5e1;
+  border-radius: 0.75em;
+  padding: 1.25em;
+  margin-top: 1em;
+  background-color: #f9fcff;
+}
+
+.material-inputs-labeled {
+  display: flex;
+  gap: 1.25em;
+  flex-wrap: wrap;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 12.5em;
+}
+
+.input-group label {
+  font-weight: 600;
+  margin-bottom: 0.4em;
+  font-size: 0.875em;
+  color: #333;
+}
+
+.input-group input {
+  padding: 0.75em;
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+  font-size: 0.875em;
+  background-color: #f4f9ff;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.input-group input:focus {
+  border-color: #007bff;
+  background-color: #fff;
+  outline: none;
+}
+
+/* ========== BUTTONS ========== */
+.button-group {
+  display: flex;
+  gap: 0.75em;
+  flex-wrap: wrap;
+}
+
+.btn,
+.addbutton,
+.delete-btn {
+  font-size: 0.875em;
+  font-weight: 500;
+  padding: 0.75em 1.125em;
+  border-radius: 0.5em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn {
+  box-shadow: 0 0.125em 0.375em rgba(0, 0, 0, 0.05);
+}
+
+.btn:hover,
+.addbutton:hover {
+  transform: translateY(-0.125em);
+  box-shadow: 0 0.25em 0.75em rgba(0, 0, 0, 0.1);
+}
+
+.btn.primary {
+  background-color: #1cc6b6;
+  color: #000;
+}
+
+.btn.primary:hover {
+  background-color: #00ddff;
+}
+
+.btn.secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.btn.secondary:hover {
+  background-color: #e0e0e0;
+}
+
+.btn.danger,
+.delete-btn {
+  background-color: #ffeaea;
+  color: #d62828;
+}
+
+.btn.danger:hover,
+.delete-btn:hover {
+  background-color: #ffcccc;
+  transform: scale(1.05);
+}
+
+.addbutton {
+  margin-top: 1em;
+  background-color: #1cc6b6;
+  color: #fff;
+}
+
+.addbutton:hover {
+  background-color: #00bfa6;
+}
+
+.delete-btn {
+  margin-top: 1.375em;
+  background-color: #ff4d4f;
+  color: white;
+}
+
+/* ========== NIGHT MODE ========== */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode header,
+body.dark-mode footer {
+  background-color: #1f1f1f;
+  color: #ccc;
+}
+
+body.dark-mode .logo,
+body.dark-mode .tab,
+body.dark-mode .btn,
+body.dark-mode .addbutton {
+  color: #fff;
+}
+
+body.dark-mode .card-container,
+body.dark-mode .raw-materials-card,
+body.dark-mode .outlined-wrapper,
+body.dark-mode input,
+body.dark-mode select {
+  background-color: #1e1e1e;
+  border-color: #333;
+  color: #f0f0f0;
+}
+
+body.dark-mode .tab-container,
+body.dark-mode .tab:hover {
+  background-color: #2c2c2c;
+}
+
+body.dark-mode .tab.active {
+  background-color: #333;
+  border-color: #555;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode select::placeholder {
+  color: #aaa;
+}
+
+body.dark-mode .btn.primary {
+  background-color: #007bff;
+}
+
+body.dark-mode .btn.secondary {
+  background-color: #444;
+}
+
+body.dark-mode .btn.danger,
+body.dark-mode .delete-btn {
+  background-color: #a32020;
+}
+
+body.dark-mode .delete-btn:hover {
+  background-color: #ff1a1a;
+}
+
+/* ========== TAB CONTENT ========== */
+.tab-content {
+  display: none;
+  max-width: 87.5em;
+  margin: 1.25em auto;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ========== THEME TOGGLE SWITCH ========== */
+.theme-toggle-wrapper {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  z-index: 1001;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 3.75em;
+  height: 1.875em;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 2.125em;
+  transition: background-color 0.4s;
+  cursor: pointer;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 1.375em;
+  width: 1.375em;
+  left: 0.25em;
+  bottom: 0.25em;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #4a4a4a;
+}
+
+input:checked + .slider::before {
+  transform: translateX(1.875em);
+}

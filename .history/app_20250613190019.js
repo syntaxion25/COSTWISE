@@ -1,9 +1,11 @@
+const toggle = document.getElementById('nightToggle');
 
-  const toggle = document.getElementById('nightToggle');
-  toggle.addEventListener('change', () => {
-    document.body.classList.toggle('dark-mode');
-  });
+// In-memory storage for templates (replaces localStorage)
+let savedTemplates = [];
 
+// Load saved preference (simplified without localStorage)
+let currentTheme = 'light';
+if (toggle) toggle.checked = false;
 
 // Uncomment if you want to enable dark mode toggle
 // toggle.addEventListener('change', () => {

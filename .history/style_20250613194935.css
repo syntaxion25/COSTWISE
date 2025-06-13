@@ -279,14 +279,12 @@ svg {
 
 .tab:hover {
   background-color: #c870e6;
-  border-radius: 8px;
 }
 
 .tab.active {
   background-color: #e5d5fb;
   font-weight: bold;
   border: 1.5px solid #afa4de;
-  color: black;
   border-radius: 8px;
 }
 
