@@ -10,7 +10,7 @@ body {
   background-color: #f8fbff;
   padding-top: 80px;
   /* space for fixed header */
-  background-color:rgb(248, 247, 247)
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 header {
