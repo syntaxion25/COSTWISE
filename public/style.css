@@ -657,3 +657,159 @@ body.dark-mode .input-group label {
   font-size: 1em;
   color: #444;
 }
+
+/* Base styling */
+#ai-insights-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Heading styling */
+#ai-insights-container h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* Content area styling */
+#ai-insights-content {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #ai-insights-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  #ai-insights-container h2 {
+    font-size: 1.5rem;
+  }
+
+  #ai-insights-content {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #ai-insights-container {
+    padding: 0.75rem;
+  }
+
+  #ai-insights-container h2 {
+    font-size: 1.25rem;
+  }
+
+  #ai-insights-content {
+    font-size: 0.9rem;
+  }
+}
+/* Chart tab specific styles */
+.chart-container-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 500px;
+}
+
+.chart-info {
+  text-align: center;
+}
+
+.chart-description {
+  font-size: 1.1em;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.chart-canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  position: relative;
+}
+
+#costPieChart {
+  max-width: 400px;
+  max-height: 400px;
+}
+
+.chart-summary {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.summary-item {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+}
+
+.summary-breakdown {
+  display: grid;
+  gap: 8px;
+}
+
+.breakdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+}
+
+.breakdown-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 1.1em;
+}
+
+.no-data-message p:first-child {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+/* Dark mode adjustments */
+.dark-mode .chart-summary {
+  background: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.dark-mode .chart-description {
+  color: #bbb;
+}
+
+.dark-mode .no-data-message {
+  color: #bbb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chart-canvas-container {
+    min-height: 300px;
+  }
+  
+  #costPieChart {
+    max-width: 300px;
+    max-height: 300px;
+  }
+}

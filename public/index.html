@@ -39,7 +39,6 @@
         </div>
     </header>
 
-
     <main>
         <div class="card-container">
             <div class="card-header">
@@ -53,7 +52,6 @@
                 </div>
                 <div class="button-group">
                     <button type="button" id="aiInsightBtn" class="btn primary">Calculate & Get AI Insights</button>
-
                     <button onclick="openSaveModal()" class="btn secondary">Save Current as Template</button>
                     <button onclick="clearForms()" class="btn danger">Clear Forms</button>
                 </div>
@@ -63,10 +61,11 @@
         <div class="tab-wrapper">
             <div class="tab-container">
                 <button class="tab" data-tab="materials_parent">Raw Materials</button>
-                <button class="tab" data-tab="labor_parent">Labor</button>
+                <button class="tab" data-tab="labor_parent">Labour</button>
                 <button class="tab" data-tab="overheads_parent">Overheads</button>
-                <button class="tab" data-tab="tab4">Miscellaneous</button>
-                <button class="tab" data-tab="tab5">Saved Templates</button>
+                <button class="tab" data-tab="miscellaneous_parent">Miscellaneous</button>
+                <button class="tab" data-tab="chart_parent">Cost Chart</button>
+                <button class="tab" data-tab="saved_templates">Saved Templates</button>
             </div>
         </div>
 
@@ -96,16 +95,20 @@
 
         <!-- Labor -->
         <div id="labor_parent" class="raw-materials-card">
-            <h2>Labor Costs</h2>
+            <h2>Labour Costs</h2>
             <div class="outlined-wrapper labor-block">
                 <div class="material-inputs-labeled">
+                    <div class="input-group">
+                        <label>Name</label>
+                        <input type="text" placeholder="Enter name of the labour" id="labor_name" class="labor-name" />
+                    </div>
                     <div class="input-group">
                         <label>Hours Worked</label>
                         <input type="number" placeholder="Enter number of hours" id="labor_hours" class="labor-hours" />
                     </div>
                     <div class="input-group">
                         <label>Labor Cost</label>
-                        <input type="number" placeholder="Enter the cost of labor" id="labor_cost" class="labor-cost" />
+                        <input type="number" placeholder="Enter the cost per/hr" id="labor_cost" class="labor-cost" />
                     </div>
                     <button onclick="deleteElement(this)" class="delete-btn">Delete</button>
                 </div>
@@ -153,6 +156,28 @@
             </div>
         </div>
 
+        <!-- Cost Chart Tab -->
+        <div id="chart_parent" class="raw-materials-card">
+            <h2>Cost Breakdown Chart</h2>
+            <div class="outlined-wrapper chart-block">
+                <div class="chart-container-wrapper">
+                    <div class="chart-info">
+                        <p class="chart-description">Visual breakdown of your production costs</p>
+                        <div id="chart-summary" class="chart-summary">
+                            <!-- Summary will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="chart-canvas-container">
+                        <canvas id="costPieChart" width="400" height="400"></canvas>
+                    </div>
+                    <div id="no-data-message" class="no-data-message">
+                        <p>📊 No cost data to display</p>
+                        <p>Enter some costs in the other tabs to see the chart!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Saved Templates -->
         <div id="saved_templates" class="raw-materials-card">
             <h2>Saved Templates</h2>
@@ -162,6 +187,7 @@
                 </div>
             </div>
         </div>
+
         <div id="ai-insights-container" class="ai-insights">
             <h2>AI Insights</h2>
             <div id="ai-insights-content">No insights available yet.</div>
@@ -173,8 +199,11 @@
         <p>&copy; 2025 CostWise</p>
     </footer>
 
+    <!-- Chart.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="app.js"></script>
     <script src="saveTemplates.js"></script>
+    <script src="piechart.js"></script>
 
 </body>
 

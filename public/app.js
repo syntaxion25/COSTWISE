@@ -84,6 +84,9 @@ async function fetchAIInsightsFromTogether(prompt) {
 
 
 
+// Fixed AI Analytics Functions
+
+// 1. Fix the generateAIInsights function
 async function generateAIInsights() {
   const materials = getAllMaterialData();
   const labor = getAllLaborData();
@@ -103,34 +106,137 @@ async function generateAIInsights() {
   Provide a brief analysis of inefficiencies or areas for cost optimization.
   `;
 
-  const insightBox = document.getElementById("ai_insights_box");
-  if (!insightBox) return;
+  // Fix: Use correct element ID
+  const insightBox = document.getElementById("ai-insights-content");
+  if (!insightBox) {
+    console.error("AI insights container not found");
+    return;
+  }
 
   insightBox.textContent = "Generating insights...";
   console.log("Generating insights with prompt:", prompt);
 
   try {
     const insights = await fetchAIInsightsFromTogether(prompt);
-    console.log("Generating success");
+    console.log("AI insights generated successfully");
     insightBox.textContent = insights;
   } catch (error) {
     console.error("Error fetching insights:", error);
-    insightBox.textContent = "Failed to generate insights.";
+    insightBox.textContent = "Failed to generate insights. Please check your API configuration.";
   }
 }
 
-// Make sure generateAIInsights is globally accessible if needed
-window.generateAIInsights = generateAIInsights;
+// 2. Fix the API call function (mock implementation for testing)
+async function fetchAIInsightsFromTogether(prompt) {
+  try {
+    // For testing - replace with your actual API endpoint
+    const res = await fetch('/api/get-insight', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
 
-document.addEventListener('DOMContentLoaded', () => {
+    if (!res.ok) {
+      throw new Error(`API request failed: ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data.insight || "No insight returned.";
+  } catch (error) {
+    console.error("AI API Error:", error);
+    
+    // Fallback: Generate basic insights locally
+    return generateBasicInsights(prompt);
+  }
+}
+
+// 3. Add fallback function for basic insights
+function generateBasicInsights(prompt) {
+  const costData = calculateTotalCost();
+  const currency = getCurrentCurrency();
+  
+  let insights = [`📊 Cost Analysis Summary\n\n`];
+  insights.push(`Total Production Cost: ${formatCurrency(costData.totalCost, currency)}\n`);
+  
+  // Cost breakdown
+  if (costData.materials.totalMaterialCost > 0) {
+    insights.push(`🔧 Materials: ${formatCurrency(costData.materials.totalMaterialCost, currency)} (${costData.breakdown.materialsPercentage}%)`);
+  }
+  
+  if (costData.labor.totalLaborCost > 0) {
+    insights.push(`👷 Labor: ${formatCurrency(costData.labor.totalLaborCost, currency)} (${costData.breakdown.laborPercentage}%)`);
+  }
+  
+  if (costData.overheads.totalOverheadCost > 0) {
+    insights.push(`🏭 Overheads: ${formatCurrency(costData.overheads.totalOverheadCost, currency)} (${costData.breakdown.overheadsPercentage}%)`);
+  }
+  
+  // Optimization suggestions
+  insights.push(`\n💡 Optimization Suggestions:`);
+  
+  if (parseFloat(costData.breakdown.materialsPercentage) > 60) {
+    insights.push(`• Materials cost is high (${costData.breakdown.materialsPercentage}%) - consider bulk purchasing or alternative suppliers`);
+  }
+  
+  if (parseFloat(costData.breakdown.laborPercentage) > 50) {
+    insights.push(`• Labor cost is significant (${costData.breakdown.laborPercentage}%) - explore automation opportunities`);
+  }
+  
+  if (parseFloat(costData.breakdown.overheadsPercentage) > 30) {
+    insights.push(`• Overheads are high (${costData.breakdown.overheadsPercentage}%) - review allocation and identify savings`);
+  }
+  
+  // Profitability insights
+  const suggestedMarkup = 1.3;
+  const suggestedPrice = costData.totalCost * suggestedMarkup;
+  insights.push(`\n📈 Profitability:`);
+  insights.push(`• Suggested selling price (30% markup): ${formatCurrency(suggestedPrice, currency)}`);
+  insights.push(`• Profit margin: ${formatCurrency(suggestedPrice - costData.totalCost, currency)}`);
+  
+  return insights.join('\n');
+}
+
+// 4. Fix event listener attachment
+function attachAIEventListener() {
   const aiBtn = document.getElementById('aiInsightBtn');
   if (aiBtn) {
+    // Remove existing listener to prevent duplicates
+    aiBtn.removeEventListener('click', generateAIInsights);
+    // Add new listener
     aiBtn.addEventListener('click', generateAIInsights);
-    console.log("Event listener added to AI insight button");
+    console.log("AI insight button event listener attached successfully");
   } else {
-    console.warn("AI insight button not found in DOM");
+    console.error("AI insight button not found in DOM");
   }
+}
+
+// 5. Improved DOMContentLoaded handler
+document.addEventListener('DOMContentLoaded', () => {
+  console.log("DOM loaded, setting up AI functionality");
+  
+  // Wait a bit for all elements to be ready
+  setTimeout(() => {
+    attachAIEventListener();
+  }, 100);
 });
+
+// 6. Make sure the function is globally accessible
+window.generateAIInsights = generateAIInsights;
+
+// 7. Add a test function to verify everything works
+function testAIInsights() {
+  console.log("Testing AI insights...");
+  const insightBox = document.getElementById("ai-insights-content");
+  if (insightBox) {
+    insightBox.textContent = "Test successful! AI insights container found.";
+    console.log("✅ AI insights container found");
+  } else {
+    console.error("❌ AI insights container not found");
+  }
+}
+
+// Call test function
+window.testAIInsights = testAIInsights;
 
 
 // Currency formatting
@@ -699,14 +805,14 @@ tabButtons.forEach(button => {
     const targetSection = document.getElementById(target);
     if (targetSection) {
       targetSection.style.display = "block";
-    } else if (target === 'tab4') {
-      // Show miscellaneous section
-      const miscSection = document.getElementById('miscellaneous_parent');
-      if (miscSection) miscSection.style.display = "block";
-    } else if (target === 'tab5') {
-      // Show saved templates section
-      const templatesSection = document.getElementById('saved_templates');
-      if (templatesSection) templatesSection.style.display = "block";
+      
+      // Special handling for chart tab
+      if (target === 'chart_parent') {
+        // Wait a moment for the section to be visible, then update chart
+        setTimeout(() => {
+          updatePieChart();
+        }, 100);
+      }
     }
 
     // Set active class
@@ -714,5 +820,10 @@ tabButtons.forEach(button => {
   });
 });
 
-// Optional: Show the first tab by default
-document.querySelector(".tab")?.click();
+// Show the first tab by default
+document.addEventListener('DOMContentLoaded', function() {
+  const firstTab = document.querySelector(".tab");
+  if (firstTab) {
+    firstTab.click();
+  }
+});
