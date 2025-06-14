@@ -292,6 +292,12 @@ svg {
   color: black;
   border-radius: 8px;
 }
+ .tab-container button {
+margin: 0 5px 0 5px;
+}
+ .tab-container button i{
+padding: 0 1rem 0 0;
+}
 
 .tab.saved-template::before {
   content: "📁";
